@@ -19,8 +19,10 @@
           antialias: true
         });
         
-        var x = -50
-        var y = -150
+        //var x = -50
+        //var y = -150
+        var x = document.addEventListener('mousemove', logKeyX);
+        var y = document.addEventListener('mousemove', logKeyY);
         
         
         renderer.setPixelRatio(window.devicePixelRatio);
@@ -57,16 +59,19 @@
             // メッシュを回転させる
           //curveObject.rotation.x += 0.0;
           //curveObject.rotation.y += 0.0;
-
-          var x = document.addEventListener('click', logKeyX(myCanvas));
-          var y = document.addEventListener('click', logKeyY(myCanvas));
+          //const scene = new THREE.Scene();
           
+          
+
+          var x = addEventListener('mousemove', logKeyY);
+          var y = addEventListener('mousemove', logKeyY);
           var curve = new THREE.CubicBezierCurve3(
 	        new THREE.Vector3(-100, 0, 0 ),
 	        new THREE.Vector3( x, y, 0 ),
 	        new THREE.Vector3( 200, 150, 0 ),
 	        new THREE.Vector3( 100, 0, 0 )
         );
+        
         
         var points = curve.getPoints( 50 );
         var geometry = new THREE.BufferGeometry().setFromPoints( points );
@@ -77,19 +82,18 @@
         var curveObject = new THREE.Line( geometry, material );
         // 3D空間にメッシュを追加
         scene.add(curveObject);
+        
         // レンダリング
           renderer.render(scene, camera);
           requestAnimationFrame(tick);
 
-          function logKeyX(e) {
-            return e.clientX;
-          }
-          function logKeyY(e) {
-            return e.clientY;
-          }
+        }
 
-          
-          
+        function logKeyX(e) {
+          return e.clientX;
+        }
+        function logKeyY(e) {
+          return e.clientY;
         }
         
       
