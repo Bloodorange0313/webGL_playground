@@ -30,7 +30,7 @@
         // 床を作成
         const meshFloor = new THREE.Mesh(
           new THREE.BoxGeometry(2000, 0.1, 2000),
-          new THREE.MeshStandardMaterial({ color: 0x808080, roughness: 0.0 })
+          new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: 0.0 })
         );
         meshFloor.receiveShadow = true;
         scene.add(meshFloor);
@@ -47,7 +47,7 @@
         meshKnot.castShadow = true;
         scene.add(meshKnot);
         // スポットライト光源を作成
-        // new THREE.SpotLight(色, 光の強さ, 距離, 角度, ボケ具合, 減衰率)
+        //new THREE.SpotLight(色, 光の強さ, 距離, 角度, ボケ具合, 減衰率)
         const light = new THREE.SpotLight(0xffffff, 2, 100, Math.PI / 4, 1);
         // ライトに影を有効にする
         light.castShadow = true;
