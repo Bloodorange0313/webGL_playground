@@ -36,7 +36,7 @@
           var b = Math.floor( Math.random() * (max + 1 - min) ) + min ;
           mesh[i].position.x = a;
           mesh[i].position.y = b;
-          var MIN_VEL = 0.3
+          var MIN_VEL = 0.3;
           var MAX_VEL = -0.3;
           v[i] =  Math.random() * (MAX_VEL- MIN_VEL) + MIN_VEL;
           //console.log(v[i]);
@@ -49,21 +49,35 @@
           // メッシュを移動させる
           //distance = [];
           var distance = JSON.parse(JSON.stringify((new Array(200)).fill((new Array(200)).fill(0))));
+          var radian = JSON.parse(JSON.stringify((new Array(200)).fill((new Array(200)).fill(0))));
+          var degree = JSON.parse(JSON.stringify((new Array(200)).fill((new Array(200)).fill(0))));
 
 
           for(var i = 0; i < NUM; i++) {
+            var p_this = mesh[i].position;
+              //console.log(p_this);
+            var v_this = v[i];
+            
             for(var j = i + 1; j < NUM; j++){
               //mesh[i].position.x += v[i];
-              var p_this = mesh[i].position;
-              //console.log(p_this);
-              var v_this = v[i];
+              
 
               var p_that = mesh[j].position;
               var v_that = v[j];
 
-              distance[i][j] = Math.sqrt(Math.pow((p_that.x - p_this.x),2) + Math.pow((p_that.y - p_this.y), 2));
+              distance[i][j] = Math.sqrt((p_that.x - p_this.x) * (p_that.x - p_this.x) + (p_that.y - p_this.y) * (p_that.y - p_this.y));
               //console.log(distance[i][j]);
+
+              radian[i][j] = Math.atan2(p_that.y - p_this.y,p_that.x - p_this.x);
+              degree[i][j] = radian[i][j] * 180/ Math.PI;
+              console.log(degree[i][j]);
+              
             }
+            //if(Math.min.apply(null, p_that) < 1){
+            mesh[i].position.x += v_this;
+            mesh[i].position.y += v_this;
+            //}
+            //console.log(p_that);
 
           }
           
