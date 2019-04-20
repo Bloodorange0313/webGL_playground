@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/101/three.min.js"></script>
+    <script>
+      // ページの読み込みを待つ
+      window.addEventListener('load', init);
+      function init() {
+        // サイズを指定
+        const width = 960;
+        const height = 540;
+        // レンダラーを作成
+        const renderer = new THREE.WebGLRenderer({
+          canvas: document.querySelector('#myCanvas'),
+          antialias: true
+        });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(width, height);
+        // シーンを作成
+        const scene = new THREE.Scene();
+        // カメラを作成
+        const camera = new THREE.PerspectiveCamera(45, width / height);
+        camera.position.set(0, 0, +1000);
+        // 円を作成
+        const geometry = new THREE.CircleGeometry( 5, 32 );
+        const material = new THREE.MeshBasicMaterial({ color: 0x6699ff });
+        var NUM = 200;　// 生成するcubeの数
+        var mesh = [];
+        var v = [];
+        for(var i = 0; i < NUM; i++) {
+          mesh[i] = new THREE.Mesh(geometry, material);
+          var min = -500 ;
+          var max = 500 ;
+
+          var a = Math.floor( Math.random() * (max + 1 - min) ) + min ;
+          var b = Math.floor( Math.random() * (max + 1 - min) ) + min ;
+          mesh[i].position.x = a;
+          mesh[i].position.y = b;
+          var MIN_VEL = 0.3
+          var MAX_VEL = -0.3;
+          v[i] =  Math.random() * (MAX_VEL- MIN_VEL) + MIN_VEL;
+          //console.log(v[i]);
+          scene.add(mesh[i]);
+        }
+        
+        tick();
+        // 毎フレーム時に実行されるループイベントです
+        function tick() {
+          // メッシュを移動させる
+          //distance = [];
+          var distance = JSON.parse(JSON.stringify((new Array(200)).fill((new Array(200)).fill(0))));
+
+
+          for(var i = 0; i < NUM; i++) {
+            for(var j = i + 1; j < NUM; j++){
+              //mesh[i].position.x += v[i];
+              var p_this = mesh[i].position;
+              //console.log(p_this);
+              var v_this = v[i];
+
+              var p_that = mesh[j].position;
+              var v_that = v[j];
+
+              distance[i][j] = Math.sqrt(Math.pow((p_that.x - p_this.x),2) + Math.pow((p_that.y - p_this.y), 2));
+              //console.log(distance[i][j]);
+            }
+
+          }
+          
+          // レンダリング
+          renderer.render(scene, camera);
+          requestAnimationFrame(tick);
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <canvas id="myCanvas"></canvas>
+  </body>
+</html>
