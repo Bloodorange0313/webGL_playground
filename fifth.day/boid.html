@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'> 
+  <script src="three.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <script>
+    $(document).ready( function() {
+      // Rendererを用意
+      renderer = new THREE.WebGLRenderer( { 'canvas' : $('#canvas')[0] } );
+      renderer.setSize(300, 300);
+
+      // Cameraを用意
+      camera = new THREE.PerspectiveCamera();
+      camera.position.z = 500;
+
+      // Sceneを用意
+      scene = new THREE.Scene();
+      scene.add( camera );
+
+      // 三角を作る
+      var material = new THREE.MeshBasicMaterial( { color: 0xeeee00 } );
+      var shape = new THREE.Shape();
+      shape.moveTo(  0, 100 );
+      shape.lineTo(  100, -50 );
+      shape.lineTo( -100, -50 );
+      shape.lineTo(  0, 100 );
+      var geometry = new THREE.ShapeGeometry( shape );
+      scene.add( new THREE.Mesh( geometry, material ) );
+
+      // 描画
+      renderer.render( scene, camera );
+    } );
+  </script>
+</head>
+
+<body>
+  <canvas id="canvas" style="border:solid 1px; margin: 30px;">
+    このブラウザは現在使われておりません。もう1度、Canvasに対応したブラウザで表示ください。
+  </canvas>
+</body>
+
+</html>
