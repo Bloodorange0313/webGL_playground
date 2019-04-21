@@ -7,8 +7,8 @@
       window.addEventListener('load', init);
       function init() {
         // サイズを指定
-        const width = 1000;
-        const height = 540;
+        const width = 700;
+        const height = 700;
         // レンダラーを作成
         const renderer = new THREE.WebGLRenderer({
           canvas: document.querySelector('#myCanvas'),
@@ -30,8 +30,8 @@
         var v_y = [];
         for(var i = 0; i < NUM; i++) {
           mesh[i] = new THREE.Mesh(geometry, material);
-          var min = - height * 3 / 4;
-          var max = height * 3 / 4;
+          var min = - height * 2 / 4;
+          var max = height * 2 / 4;
 
           var a = Math.floor( Math.random() * (max + 1 - min) ) + min ;
           var b = Math.floor( Math.random() * (max + 1 - min) ) + min ;
@@ -53,13 +53,13 @@
 
         function tick() {
 
-          const COHESION_FORCE = 0.4
-          const SEPARATION_FORCE = 0.1
-          const ALIGNMENT_FORCE = 0.4
+          const COHESION_FORCE = 0.2
+          const SEPARATION_FORCE = 0.4
+          const ALIGNMENT_FORCE = 0.5
           const BOUNDARY_FORCE = 0.3
 
-          const COHESION_DISTANCE = 100.0
-          const SEPARATION_DISTANCE = 20.0
+          const COHESION_DISTANCE = 50.0
+          const SEPARATION_DISTANCE = 5.0
           const ALIGNMENT_DISTANCE = 50.0
 
           const COHESION_ANGLE = Math.PI / 2
@@ -70,6 +70,8 @@
           
           var distance = JSON.parse(JSON.stringify((new Array(NUM)).fill((new Array(NUM)).fill(100))));
           var radian = JSON.parse(JSON.stringify((new Array(NUM)).fill((new Array(NUM)).fill(0))));
+          //var radiana = JSON.parse(JSON.stringify((new Array(NUM)).fill((new Array(NUM)).fill(0))));
+          
           var degree = JSON.parse(JSON.stringify((new Array(NUM)).fill((new Array(NUM)).fill(0))));
           var coh_agents_x = [];
           var sep_agents_x = [];
@@ -110,6 +112,7 @@
               //console.log(distance[i][j]);
 
               radian[i][j] = Math.atan2(p_that.y - p_this.y,p_that.x - p_this.x);
+              //radiana[i][j] = Math.atan2(-p_that.y + p_this.y,-p_that.x + p_this.x);
               degree[i][j] = radian[i][j] * 180/ Math.PI;
               //console.log(degree[i][j]);
               //各力が働く個体のリスト
@@ -127,12 +130,12 @@
 
             }
             var x_sum_coh = 0;
-              var y_sum_coh = 0;
-              for(var k = 0; k < coh_agents_x.length; ++k){
-                x_sum_coh += mesh[coh_agents_x[k]].position.x;
-                y_sum_coh += mesh[coh_agents_x[k]].position.y;
-                //console.log(mesh[coh_agents_x[k]].position.x);
-              }
+            var y_sum_coh = 0;
+            for(var k = 0; k < coh_agents_x.length; ++k){
+              x_sum_coh += mesh[coh_agents_x[k]].position.x;
+              y_sum_coh += mesh[coh_agents_x[k]].position.y;
+              //console.log(mesh[coh_agents_x[k]].position.x);
+            }
 
               var x_sum_sep = 0;
               var y_sum_sep = 0;
@@ -205,18 +208,18 @@
               }
               */
               
-              /*
-              if(Math.abs(p_this.x) > width / 2 - 5 ){
+              
+              if(Math.abs(p_this.x) > width   - 150){
                 //degree[i] += Math.PI / 2;
-                radian1[i] = Math.atan2(0.0 - p_this.y,0.0 - p_this.x);
-                degree1[i] = radian1[i] * 180/ Math.PI;
+                p_this.x = -p_this.x;
+                
               }
               
-              if(Math.abs(p_this.y) > height /2 - 10 ){
-                  //degree[i] += Math.PI / 2;
-                  radian1[i] = Math.atan2(0.0 - p_this.y,0.0 - p_this.x);
-                  degree1[i] = radian1[i] * 180/ Math.PI;
-              }*/
+              if(Math.abs(p_this.y) > height - 150 ){
+                p_this.y += -p_this.y * 2;
+                //p_this.x *= -1;
+                //v_y[i] *= 1.5;
+              }
               
               /*
               if(Math.abs(v_x[i]) > MAX_VEL / 100.0){
