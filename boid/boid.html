@@ -23,7 +23,7 @@
         camera.position.set(0, 0, +1000);
         // 円を作成
         const geometry = new THREE.CircleGeometry( 5, 32 );
-        const material = new THREE.MeshBasicMaterial({ color: 0x6699ff });
+        const material = new THREE.MeshBasicMaterial({ color: 0x0000FF });
         var NUM = 100;　// 生成するcubeの数
         var mesh = [];
         var v_x = [];
@@ -52,26 +52,26 @@
 
 
         function tick() {
-
+          
+          //力の強さ
           const COHESION_FORCE = 0.2
           const SEPARATION_FORCE = 0.4
           const ALIGNMENT_FORCE = 0.5
           const BOUNDARY_FORCE = 0.3
 
+          //力の働く距離
           const COHESION_DISTANCE = 50.0
           const SEPARATION_DISTANCE = 5.0
           const ALIGNMENT_DISTANCE = 50.0
 
+          //力の働く角度
           const COHESION_ANGLE = Math.PI / 2
           const SEPARATION_ANGLE = Math.PI / 2
           const ALIGNMENT_ANGLE = Math.PI / 3
-          // メッシュを移動させる
-          //distance = [];
           
+          //配列の初期化
           var distance = JSON.parse(JSON.stringify((new Array(NUM)).fill((new Array(NUM)).fill(100))));
-          var radian = JSON.parse(JSON.stringify((new Array(NUM)).fill((new Array(NUM)).fill(0))));
-          //var radiana = JSON.parse(JSON.stringify((new Array(NUM)).fill((new Array(NUM)).fill(0))));
-          
+          var radian = JSON.parse(JSON.stringify((new Array(NUM)).fill((new Array(NUM)).fill(0))));          
           var degree = JSON.parse(JSON.stringify((new Array(NUM)).fill((new Array(NUM)).fill(0))));
           var coh_agents_x = [];
           var sep_agents_x = [];
@@ -85,14 +85,12 @@
           var dv_boundary_x = [];
           var dv_boundary_y = [];
           var dist_center = [];
-          var degree1 = [];
-          var radian1 = [];
           
           //var coh_agents_x = JSON.parse(JSON.stringify((new Array(NUM)).fill((new Array(NUM)).fill())));
           for(var i = 0; i < NUM; i++) {
             
 
-
+            //ここで計算する個体の位置と速度
             var p_this = mesh[i].position;
               //console.log(p_this);
             var v_this_x = v_x[i];
@@ -102,17 +100,16 @@
             for(var j = i + 1; j < NUM; j++){
               //mesh[i].position.x += v[i];
               
-
+              //同じではない2点間の距離
               var p_that = mesh[j].position;
               //console.log(p_that);
               var v_that_x = v_x[j];
               var v_that_y = v_y[j];
-
+              //個体間の距離と角度
               distance[i][j] = Math.sqrt((p_that.x - p_this.x) * (p_that.x - p_this.x) + (p_that.y - p_this.y) * (p_that.y - p_this.y));
               //console.log(distance[i][j]);
 
               radian[i][j] = Math.atan2(p_that.y - p_this.y,p_that.x - p_this.x);
-              //radiana[i][j] = Math.atan2(-p_that.y + p_this.y,-p_that.x + p_this.x);
               degree[i][j] = radian[i][j] * 180/ Math.PI;
               //console.log(degree[i][j]);
               //各力が働く個体のリスト
@@ -129,6 +126,7 @@
               
 
             }
+            //結合
             var x_sum_coh = 0;
             var y_sum_coh = 0;
             for(var k = 0; k < coh_agents_x.length; ++k){
@@ -136,7 +134,7 @@
               y_sum_coh += mesh[coh_agents_x[k]].position.y;
               //console.log(mesh[coh_agents_x[k]].position.x);
             }
-
+              //分離
               var x_sum_sep = 0;
               var y_sum_sep = 0;
               for(var k = 0; k < sep_agents_x.length; ++k){
@@ -145,7 +143,7 @@
                 //console.log(mesh[coh_agents_x[k]].position.x);
               }
               //console.log(x_sum_sep);
-
+              //整列
               var x_sum_ali = 0;
               var y_sum_ali = 0;
               for(var k = 0; k < ali_agents_x.length; ++k){
@@ -154,7 +152,7 @@
                 //console.log(mesh[coh_agents_x[k]].position.x);
               }
               //console.log(x_sum_coh);
-              
+              //結合
               if(coh_agents_x.length > 0){
                 dv_coh_x[i] = COHESION_FORCE * ((x_sum_coh / coh_agents_x.length) - p_this.x);
                 dv_coh_y[i] = COHESION_FORCE * ((y_sum_coh / coh_agents_x.length) - p_this.y);
@@ -162,6 +160,7 @@
                 dv_coh_x[i] = 0.0;
                 dv_coh_y[i] = 0.0;
               }
+              //分離
               if(sep_agents_x.length > 0){
                 dv_sep_x[i] = SEPARATION_FORCE * x_sum_sep;
                 dv_sep_y[i] = SEPARATION_FORCE * y_sum_sep;
@@ -170,6 +169,7 @@
                 dv_sep_y[i] = 0.0;
               }
               //console.log(dv_sep_x);
+              //整列
               if(ali_agents_x.length > 0){
                 dv_ali_x[i] = ALIGNMENT_FORCE * ((x_sum_ali / ali_agents_x.length) - v_this_x);
                 dv_ali_y[i] = ALIGNMENT_FORCE * ((y_sum_ali / ali_agents_x.length) - v_this_y);
@@ -191,24 +191,11 @@
               //console.log(dv_boundary_x);
               //console.log(dv_coh_x[i] + dv_sep_x[i] + dv_ali_x[i] + dv_boundary_x[i]);
               
+              //速さを求める
               v_x[i] += dv_coh_x[i] + dv_sep_x[i] + dv_ali_x[i] + dv_boundary_x[i];
               v_y[i] += dv_coh_y[i] + dv_sep_y[i] + dv_ali_y[i] + dv_boundary_y[i];
-              /*
-              if(Math.abs(v_x[i])  > MAX_VEL){
-                v_x[i] *= 0.6;
-              }
-              if(Math.abs(v_y[i])  > MAX_VEL){
-                v_y[i] *= 0.6;
-              }
-              if(Math.abs(v_x[i]) < MIN_VEL){
-                v_x[i] *= 1.3;
-              }
-              if(Math.abs(v_y[i]) < MIN_VEL){
-                v_y[i] *= 1.3;
-              }
-              */
               
-              
+              //端に行った場合の処理
               if(Math.abs(p_this.x) > width   - 150){
                 //degree[i] += Math.PI / 2;
                 p_this.x = -p_this.x;
@@ -217,35 +204,17 @@
               
               if(Math.abs(p_this.y) > height - 150 ){
                 p_this.y += -p_this.y * 2;
-                //p_this.x *= -1;
+                p_this.x *= -1;
                 //v_y[i] *= 1.5;
               }
               
-              /*
-              if(Math.abs(v_x[i]) > MAX_VEL / 100.0){
-                v_x[i] *= 0.8;
-              }
-              if(Math.abs(v_y[i]) > MAX_VEL / 100.0){
-                v_y[i] *= 0.8;
-              }
-              */
-              
-              p_this.x += v_x[i] / 1000.0;
-              p_this.y += v_y[i] / 1000.0;
+              //移動する
+              p_this.x += v_x[i] / 800.0;
+              p_this.y += v_y[i] / 800.0;
               
               
               console.log(v_x[i]);
               console.log(v_y[i]);
-
-            
-            
-            //
-            //if(Math.abs(Math.min.apply(null, distance[i])) > 10){
-              ///mesh[i].position.x += v_this;
-              //mesh[i].position.y += v_this;
-            //}
-            //console.log(Math.min.apply(null, distance[i]));
-
           }
           
           // レンダリング
