@@ -113,14 +113,14 @@
               degree[i][j] = radian[i][j] * 180/ Math.PI;
               //console.log(degree[i][j]);
               //各力が働く個体のリスト
-              if((distance[i][j] < COHESION_DISTANCE) && (degree[i][j] < COHESION_ANGLE)){
+              if((distance[i][j] < COHESION_DISTANCE) /*&& (degree[i][j] < COHESION_ANGLE)*/){
                 coh_agents_x.push(j);
                 //console.log(coh_agents_x);
               }
-              if((distance[i][j] < SEPARATION_DISTANCE) && (degree[i][j] < SEPARATION_ANGLE)){
+              if((distance[i][j] < SEPARATION_DISTANCE) /*&& (degree[i][j] < SEPARATION_ANGLE)*/){
                 sep_agents_x.push(j);
               }
-              if((distance[i][j] < ALIGNMENT_DISTANCE) && (degree[i][j] < ALIGNMENT_ANGLE)){
+              if((distance[i][j] < ALIGNMENT_DISTANCE) /*&& (degree[i][j] < ALIGNMENT_ANGLE)*/){
                 ali_agents_x.push(j);
               }
               
